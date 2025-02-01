@@ -2,9 +2,14 @@ var express = require('express');
 var handlebars = require('hbs').handlebars;
 var fs = require('fs');
 var router = express.Router();
-// var octokit = require('octokit')
+var App = require('@octokit').App
+
 
 // login (how do I persist a user sesion?)
+const app = new App({
+  appId: 1130592,
+  privateKey: PRIVATE_KEY,
+});
 
 // fetch template from repo
 
