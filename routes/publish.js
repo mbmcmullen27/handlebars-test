@@ -2,40 +2,40 @@ var express = require('express');
 var handlebars = require('hbs').handlebars;
 var fs = require('fs');
 var router = express.Router();
-var App = require('octokit').App
+import('octokit').then((github)=>{
 
+    let App = github.App
 
-// login (how do I persist a user sesion?)
-// const app = new App({
-//   appId: 1130592,
-//   privateKey: fs.readFileSync('fishbars-handle-app.2025-02-01.private-key.pem', 'utf-8'),
-// });
+    // fetch template from repo
 
+    // render template with values
 
-// fetch template from repo
+    // attempt to create the repo with octokit
 
-// render template with values
+    // send errors
+    router.get('/', async function(req, res, next) {
+        const app = new App({ appId:"1130592", privateKey: fs.readFileSync('fishbars-handle-app.2025-03-16.private-key.pem', 'utf-8')});
+        const { data:{ slug:slug } } = await app.octokit.rest.apps.getAuthenticated();
+        const octokit = await app.getInstallationOctokit(60391574);
 
-// attempt to create the repo with octokit
+        console.log(slug)
 
-// send errors
-router.get('/', async function(req, res, next) {
-    const app = new App({ appId:"1130592", privateKey: fs.readFileSync('fishbars-handle-app.2025-02-01.private-key.pem', 'utf-8')});
-    const { data: slug } = await app.octokit.rest.apps.getAuthenticated();
-    const octokit = await app.getInstallationOctokit(12360391574);
-    // const octokit = await app.getInstallationOctokit(123);
-    await octokit.rest.issues.create({
-        owner: "mbmcmullen27",
-        repo: "handlebars-test",
-        title: "Hello world from " + slug,
+        await octokit.rest.issues.create({
+            owner: "mbmcmullen27",
+            repo: "handlebars-test",
+            title: "Hello world from " + slug,
+        });
+
+        console.log(
+            await octokit.rest.repos.get({
+                owner: 'mbmcmullen27',
+                repo: 'handlebars-test',
+            })
+        )
+
+        res.send("WHATEVER!")
     });
-    // console.log(
-    //     octokit.rest.repos.get({
-    //         owner: 'mbmcmullen27',
-    //         repo: 'handlebars-test',
-    //     })
-    // )
-    res.send("WHATEVER!")
-});
+
+})
 
 module.exports = router;
